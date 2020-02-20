@@ -1,0 +1,137 @@
+#include "simulationservices_sbnd.fcl"
+#include "singles_sbnd.fcl"
+#include "largeantmodules_sbnd.fcl"
+#include "detsimmodules_sbnd.fcl"
+#include "opticaldetectormodules_sbnd.fcl"
+#include "photpropservices_sbnd.fcl"
+#include "lightsource_sbnd.fcl"
+
+#include "messages_sbnd.fcl"
+
+process_name: ScintBuild
+
+services:
+{
+  # Load the service that manages root files for histograms.
+  TFileService: { fileName: "ScintInfoFile.root" }
+  RandomNumberGenerator: {} #ART native random number generator
+  @table::sbnd_simulation_services # load simulation services in bulk
+  OpDetResponseInterface: @local::sbnd_opdetresponse
+  message: @local::sbnd_message_services_interactive	
+}
+
+services.PhotonVisibilityService: @local::standard_photonvisibilityservice_buildlib
+# don't want to save the visibilities?
+services.PhotonVisibilityService.LibraryBuildJob: false
+
+# define the geometry to use
+services.Geometry.GDML: "sbnd_v01_04.gdml"
+services.AuxDetGeometry.GDML: "sbnd_v01_04.gdml"
+
+# for a geometry with or without wires change accordingly this line
+services.Geometry.DisableWiresInG4: true
+
+#Start each new event with an empty event.
+source:
+{
+  module_type: EmptyEvent
+  timestampPlugin: { plugin_type: "GeneratedEventTimestamp" }
+  maxEvents:   250         # Number of events to create
+  firstRun:    1           # Run number to use for this file
+  firstEvent:  1           # number of first event in the file
+}
+
+# Define and configure some modules to do work on each event.
+# First modules are defined; they are scheduled later.
+# Modules are grouped by type.
+physics:
+{
+
+ producers:
+ {
+   generator: @local::sbnd_lightsource	  
+   largeant:  @local::sbnd_largeant	  
+ }
+
+ analyzers:
+ {
+   pmtresponse: @local::sbnd_simphotoncounter
+ }
+
+ #define the producer and filter modules for this path, order matters, 
+ #filters reject all following items.  see lines starting physics.producers below
+ simulate: [ generator, largeant ]
+ analyzeIt:  [ pmtresponse ]
+ #define the output stream, there could be more than one if using filters 
+ stream1:  [ ]
+
+ #trigger_paths is a keyword and contains the paths that modify the art::event, 
+ #ie filters and producers
+ trigger_paths: [simulate] 
+
+ #end_paths is a keyword and contains the paths that do not modify the art::Event, 
+ #ie analyzers and output streams.  these all run simultaneously
+ end_paths:     [analyzeIt, stream1]  
+}
+
+# Begin optical specific parts:
+
+# enable optical physics in LArG4
+services.LArG4Parameters.EnabledPhysics: [      "Em", 
+						"Optical", 
+						"SynchrotronAndGN", 
+						"Ion", 
+						"Hadron", 
+						"Decay", 
+						"HadronElastic", 
+						"Stopping", 
+						"NeutronTrackingCut" ]
+
+# enable this custom physics list
+services.LArG4Parameters.UseCustomPhysics: true
+# To disable wireplane absorption model, uncomment this line
+services.LArG4Parameters.OpticalParamModels: ["TransparentPlaneAction"]
+
+physics.producers.generator.SourceMode: 0
+physics.producers.generator.PDist: 1
+physics.producers.generator.SteeringFile:  "./myLightSourceSteering.txt"
+
+# do not allow lightsource to write output into root file
+physics.producers.generator.FillTree: true
+physics.analyzers.pmtresponse.MakeAllPhotonsTree: true
+physics.analyzers.pmtresponse.MakeDetectedPhotonsTree: false
+physics.analyzers.pmtresponse.MakeOpDetsTree: false
+physics.analyzers.pmtresponse.MakeOpDetEventsTree: false
+
+services.PhotonVisibilityService.StoreReflected: true
+services.LArPropertiesService.LoadExtraMatProperties: true
+services.DetectorPropertiesService.SimpleBoundaryProcess: false
+
+services.LArPropertiesService.ScintPreScale: 1
+
+#LArSoft default
+#services.LArPropertiesService.RayleighEnergies: [ 2.80, 3.00, 3.50, 4.00, 5.00, 6.00, 7.00,
+#						8.00, 8.50, 9.00, 9.20, 9.40, 9.50, 9.60, 
+#						9.70, 9.80, 9.90, 10.0, 10.2, 10.4, 10.6, 10.8 ]
+#services.LArPropertiesService.RayleighSpectrum: [ 47923., 35981., 18825., 10653., 3972., 1681., 750.9, 
+#						334.7, 216.8, 135.0, 109.7, 88.06, 78.32, 69.34, 
+#						61.06, 53.46, 46.50, 40.13, 28.91, 19.81, 12.61, 7.20 ]
+
+#When no RS
+#services.LArPropertiesService.RayleighEnergies: [ 2.80, 10.8 ]
+#services.LArPropertiesService.RayleighSpectrum: [ 1000000., 1000000. ]
+
+#Updated values including Bordoni et al. measuremet
+services.LArPropertiesService.RIndexEnergies: [1.2, 1.7, 2.2, 2.7, 3.2, 3.7, 4.2, 
+					      4.7, 5.2, 5.7, 6.2, 6.7, 7.2, 7.7, 
+					      8.2, 8.7, 9.2, 9.7, 10.2, 10.7]
+services.LArPropertiesService.RIndexSpectrum: [1.25062, 1.22797, 1.23343, 1.23576, 1.23779, 1.23997, 1.24247,
+					      1.24541, 1.24891, 1.2531, 1.25817, 1.26438, 1.27209, 1.28185,
+					      1.29449, 1.31143, 1.33516, 1.3706, 1.42907, 1.54365]
+
+services.LArPropertiesService.RayleighEnergies: [1.2, 1.7, 2.2, 2.7, 3.2, 3.7, 4.2, 
+						 4.7, 5.2, 5.7, 6.2, 6.7, 7.2, 7.7, 
+						 8.2, 8.7, 9.2, 9.7, 10.2, 10.7]
+services.LArPropertiesService.RayleighSpectrum: [1133040, 358147, 120260, 51693.8, 25633.8, 14011.9, 8218.72,
+						 5081.75, 3270.59, 2170, 1472.67, 1015.2, 706.144, 492.027, 
+						 340.444, 231.151, 151.229, 92.3731, 49.4232, 19.7203]
