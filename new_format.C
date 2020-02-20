@@ -1,10 +1,10 @@
 {
 
-  //lista0.txt is the list of the path/output_files we have generated for our study
+  //lista.txt is the list of the path/output_files we have generated for our study
   //An example line would be:
   ///pnfs/sbnd/scratch/users/gamez/v08_34_00/gen/semi_mode/28205516_0/372_scint.root
 
-  ifstream Traks_file1("./lista5.txt");
+  ifstream Traks_file1("./lista.txt");
   if(!Traks_file1) cerr << "WARNING:  Failed to open file 1"<< endl;
   Traks_file1.seekg(0);
 
@@ -24,7 +24,7 @@
     //cout<<first<<"  "<<last<<endl;
     std::string id_number = files.substr(first + 3,last - first - 3);
 
-    int n_new = stoi(id_number) + 1166;
+    int n_new = stoi(id_number);
 
     string names = "v04_tree";
  
@@ -33,12 +33,10 @@
     //    cout<<"I: "<<inFile<<endl;
 
     char outFile[120];
-    //sprintf(outFile,"%s_%s.root",names.c_str(),id_number.c_str());  
     sprintf(outFile,"%s_%i.root",names.c_str(),n_new);    
     //n++;
 
-
-    cout<<"O: "<<outFile<<endl;
+    cout<<"Ouput name: "<<outFile<<endl;
     //Get old file, old tree and set top branch address
         TFile *oldfile = new TFile(inFile);
     
