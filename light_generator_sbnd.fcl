@@ -110,28 +110,10 @@ services.DetectorPropertiesService.SimpleBoundaryProcess: false
 services.LArPropertiesService.ScintPreScale: 1
 
 #LArSoft default
-#services.LArPropertiesService.RayleighEnergies: [ 2.80, 3.00, 3.50, 4.00, 5.00, 6.00, 7.00,
-#						8.00, 8.50, 9.00, 9.20, 9.40, 9.50, 9.60, 
-#						9.70, 9.80, 9.90, 10.0, 10.2, 10.4, 10.6, 10.8 ]
-#services.LArPropertiesService.RayleighSpectrum: [ 47923., 35981., 18825., 10653., 3972., 1681., 750.9, 
-#						334.7, 216.8, 135.0, 109.7, 88.06, 78.32, 69.34, 
-#						61.06, 53.46, 46.50, 40.13, 28.91, 19.81, 12.61, 7.20 ]
+services.LArPropertiesService.RayleighEnergies: [ 2.80, 3.00, 3.50, 4.00, 5.00, 6.00, 7.00,
+						8.00, 8.50, 9.00, 9.20, 9.40, 9.50, 9.60, 
+						9.70, 9.80, 9.90, 10.0, 10.2, 10.4, 10.6, 10.8 ]
+services.LArPropertiesService.RayleighSpectrum: [ 47923., 35981., 18825., 10653., 3972., 1681., 750.9, 
+						334.7, 216.8, 135.0, 109.7, 88.06, 78.32, 69.34, 
+						61.06, 53.46, 46.50, 40.13, 28.91, 19.81, 12.61, 7.20 ]
 
-#When no RS
-#services.LArPropertiesService.RayleighEnergies: [ 2.80, 10.8 ]
-#services.LArPropertiesService.RayleighSpectrum: [ 1000000., 1000000. ]
-
-#Updated values including Bordoni et al. measuremet
-services.LArPropertiesService.RIndexEnergies: [1.2, 1.7, 2.2, 2.7, 3.2, 3.7, 4.2, 
-					      4.7, 5.2, 5.7, 6.2, 6.7, 7.2, 7.7, 
-					      8.2, 8.7, 9.2, 9.7, 10.2, 10.7]
-services.LArPropertiesService.RIndexSpectrum: [1.25062, 1.22797, 1.23343, 1.23576, 1.23779, 1.23997, 1.24247,
-					      1.24541, 1.24891, 1.2531, 1.25817, 1.26438, 1.27209, 1.28185,
-					      1.29449, 1.31143, 1.33516, 1.3706, 1.42907, 1.54365]
-
-services.LArPropertiesService.RayleighEnergies: [1.2, 1.7, 2.2, 2.7, 3.2, 3.7, 4.2, 
-						 4.7, 5.2, 5.7, 6.2, 6.7, 7.2, 7.7, 
-						 8.2, 8.7, 9.2, 9.7, 10.2, 10.7]
-services.LArPropertiesService.RayleighSpectrum: [1133040, 358147, 120260, 51693.8, 25633.8, 14011.9, 8218.72,
-						 5081.75, 3270.59, 2170, 1472.67, 1015.2, 706.144, 492.027, 
-						 340.444, 231.151, 151.229, 92.3731, 49.4232, 19.7203]
