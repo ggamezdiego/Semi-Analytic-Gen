@@ -6,7 +6,7 @@
 <!ENTITY release "v08_34_00">
 <!ENTITY file_type "mc">
 <!ENTITY run_type "physics">
-<!ENTITY name "semimode1">
+<!ENTITY name "semimode">
 <!ENTITY tag "param">
 ]>
 
@@ -19,7 +19,7 @@
   <numevents>22000</numevents> 
 
   <!-- Operating System -->
-  <os>SL6</os>
+  <os>SL7</os>
 
   <!-- Batch resources -->
   <resource>DEDICATED,OPPORTUNISTIC</resource>
