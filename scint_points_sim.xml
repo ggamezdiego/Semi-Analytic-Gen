@@ -16,7 +16,7 @@
   <group>lar1nd</group>
 
   <!-- Project size -->
-  <numevents>22000</numevents> 
+  <numevents>36000</numevents> 
 
   <!-- Operating System -->
   <os>SL7</os>
@@ -37,8 +37,8 @@
     <outdir>/pnfs/sbnd/scratch/users/gamez/&release;/gen/&name;</outdir>
     <workdir>/pnfs/sbnd/scratch/users/gamez/&release;/work/gen/&name;</workdir>
     <initsource>/pnfs/sbnd/scratch/users/gamez/SolidTest/scint_positions_gen.sh</initsource>
-    <numjobs>88</numjobs>
-    <jobsub>--memory=5000 --maxConcurrent=250 --expected-lifetime=10h</jobsub>
+    <numjobs>360</numjobs>
+    <jobsub>--memory=5000 --maxConcurrent=250 --expected-lifetime=8h</jobsub>
     <defname>&name;_&tag;_gen</defname>  
   </stage>
 
