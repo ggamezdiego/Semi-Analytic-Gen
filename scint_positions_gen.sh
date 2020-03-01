@@ -10,20 +10,23 @@ NEWPROCESS=`echo "($JOBSUBJOBSECTION - 1) " | bc`
 # Arrays with the (x, y, z) for the scintillation points 
 #------------------------------------------------------------
 x_=( 10. 30. 50. 70. 90. 110. 130. 150. 170. 190.)
+nx=10 #length of the above array (x_)
 y_=( 40. 50. 60. 90. 100. 110. 170. 180. 190. )
+ny=9  #length of the above array (y_)
 z_=( 285. 345. 405. 465. )
+nz=4  #length of the above array (z_)
 # Some variable definitions
 counter=0
 N=1
 N_photons_per_job=100000
 # loop over our chosen points
-for (( i = 0; i < 10; i++ )) ### loop in x coordinate ###
+for (( i = 0; i < ${nx}; i++ )) ### loop in x coordinate ###
 do
    
-    for (( j = 0 ; j < 9; j++ )) ### loop in y coordinate ###
+    for (( j = 0 ; j < ${ny}; j++ )) ### loop in y coordinate ###
     do
 	
-        for (( k = 0 ; k < 4; k++ )) ### loop in z coordinate ###
+        for (( k = 0 ; k < ${nz}; k++ )) ### loop in z coordinate ###
 	do
 	    for (( l = 0; l < $N; l++ )) ### we repeat xN the number of jobs with the same (x,y,z) ###
 	    do            
