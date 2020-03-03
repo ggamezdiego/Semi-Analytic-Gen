@@ -221,7 +221,10 @@ void calcula(string positions, string path_files, string lista_files,
   // 8" PMT radius
   double b = 8*2.54/2.;
   // Y-Z coordinates of the active volume center
+  //SBND geometry v01_04 values:
   const double centerYZ[2] = {0., 250.};
+  //DUNE geometry dune1x2x6 values:
+  //const double centerYZ[2] = {0., 700.};	
   // LAr absorption length in cm
   // This needs to match with the value used in the full-geant4 simulation
   const double L_abs = 2000.;
