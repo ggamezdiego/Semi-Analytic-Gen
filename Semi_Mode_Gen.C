@@ -314,9 +314,9 @@ void calcula(string positions, string path_files, string lista_files,
     
     //loop over the channels
     for(int i=0; i<numberDevices; i++) {
-      
-      //Only PMTs in TPC with x>0 for this test
-      if(devx.at(i) != 211.465) continue;
+      // Next lines ONLY apply for SBND case to select 
+      // only PMTs in TPC with x>0 for this test:	
+      //if(devx.at(i) != 211.465) continue;
       
       int entries = nDL[i];
       if(entries < min_number_entries) continue;
@@ -405,19 +405,31 @@ void Semi_Mode_Gen() {
     theta[i] =  delta_angulo/2 + i*delta_angulo;
   
   //Distance range and step for the profile to fit with GH
+  //SBND suggested values:
   double d_min = 0;
   double d_max = 500.;
   double step_d =25;
-  
+  //DUNE suggested values:
+  /*double d_min = 0;
+  double d_max = 1000.;
+  double step_d =40;*/
+	
   //Center distance bins
+  //SBND suggested values:
   const int M = 8;
   double range_d = 320;
+  //DUNE suggested values:
+  /*const int M = 4;
+  double range_d =1000;*/
   double delta_d = range_d/M;
   TH1D* h=new TH1D("","",range_d, 0, range_d);
 
   // Initializing parameters for GH fit
   string options = "W0Q";
-  double pars_ini[4] = {1., 100., 50, -250};
+  //SBND suggested values:
+  double pars_ini[4] = {1., 100., 50, -250};//90cm <RS>
+  //DUNE suggested values:
+  //double pars_ini[4]= {1., 100., 50, -1000};//90cm <RS>
   TF1 *GH[N][M];
   TH1D* hd_centers[M];
   for(int k=0; k < M; k++) {
