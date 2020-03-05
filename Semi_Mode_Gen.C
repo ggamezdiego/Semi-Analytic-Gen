@@ -52,8 +52,8 @@ Double_t GaisserHillas(double *x,double *par)
 
 //Distance to the center in the Y-Z Plane
 double GetDistanceCenter(const double center[2], double z, double y){
-  z = abs(z - center[1]) - center[1];
-  y = abs(y) - center[0];
+  z -= center[1];
+  y -= center[0];
   
   return  sqrt(y*y + z*z);
 }  
