@@ -208,10 +208,42 @@ Double_t Omega_Dome(const int n, double d, double h0, double b0)
   return geo_factor;
 }
 
+Double_t Omega_Dome_Model(double distance,double theta)
+{
+  // this function calculates the solid angle of a semi-sphere of radius b,
+  // as a correction to the analytic formula of the on-axix solid angle,
+  // as we move off-axis an angle theta. We have used 9-angular bins
+  // with delta_theta width.
+  
+  // par0 = Radius correction close
+  // par1 = Radius correction far
+  // par2 = breaking distance betwween "close" and "far"
+
+  double par0[9] = {0., 0., 0., 0., 0., 0.597542, 1.00872, 1.46993, 2.04221}; 
+  double par1[9] = {0, 0, 0.19569, 0.300449, 0.555598, 0.854939, 1.39166, 2.19141, 2.57732};
+  const double delta_theta = 10.;
+  int j = int(theta/delta_theta);
+  // 8" PMT radius
+  const double b = 8*2.54/2.;
+  // distance form which the model parameters break (empirical value)
+  const double d_break = 5*b;//par2
+  
+  if(distance >= d_break) {
+    double R_apparent_far = b - par1[j];
+    return  (2*3.1416 * (1 - sqrt(1 - pow(R_apparent_far/distance,2))));
+    
+  }
+  else {
+    double R_apparent_close = b - par0[j];
+    return (2*3.1416 * (1 - sqrt(1 - pow(R_apparent_close/distance,2))));
+  }
+  
+}
+
 void calcula(string positions, string path_files, string lista_files,
 	     vector<double> &v1, vector<double> &v2, vector<double> &v3,
 	     vector<double> &v4, vector<double> &v5,
-	     bool IsRectangular, const int nLayers) {
+	     bool IsRectangular, bool IsSphere, const int nLayers) {
   cout<<"calcula function ..."<<endl;
 
   double min_number_entries = 0;
@@ -346,6 +378,10 @@ void calcula(string positions, string path_files, string lista_files,
 	geo_factor  = Rectangle_SolidAngle(detPoint, ScintPoint_rel);
       }	
       else {
+	if(IsSphere) {
+	  geo_factor = Omega_Dome_Model(distance_to_pmt, theta);
+	}
+	else {
 	//------Disk approach---------	
 	double d,h;
 	//offset in z-y plane
@@ -359,6 +395,7 @@ void calcula(string positions, string path_files, string lista_files,
 	  geo_factor = Omega_Dome(1, d, h, b);
 	//----------------------
       }
+    }
       
       //pure geometric estimation of the number of arriving VUV photons
       double rec_N =  exp(-1.*distance_to_pmt/L_abs)*gRandom->Poisson(num_phot_generated*geo_factor/(4*3.1416));
@@ -393,11 +430,13 @@ void Semi_Mode_Gen() {
   // Keep in mind that you will use this approach if the estimation
   // of the corrections and also in the reconstruction of the signals
   // by the estimated correctio
-  const int nLayers = 2;
+  const int nLayers = 1;
 
   //If PMTs false, if (X-)ARAPUCAS true
   bool IsRectangular = false;
-  
+  //Option true for the PMTs semi-spheric
+  bool IsSphere = true;	
+	
   //offset- angle theta binning
   const int N = 9;
   double delta_angulo = 90./N;
@@ -462,7 +501,7 @@ void Semi_Mode_Gen() {
   }
   // Calculating true and rec variables for the analysis
   vector<double> v_distance, v_hits, v_rec_hits, v_offset_angle, v_d_center;
-  calcula(positions, path_files, lista_files, v_distance, v_hits, v_rec_hits, v_offset_angle, v_d_center, IsRectangular, nLayers);
+  calcula(positions, path_files, lista_files, v_distance, v_hits, v_rec_hits, v_offset_angle, v_d_center, IsRectangular, IsSphere, nLayers);
   for(int i=0; i<v_distance.size(); i++) {
     double costheta = cos(3.1416*v_offset_angle.at(i)/180.);
     //which angulat bin
