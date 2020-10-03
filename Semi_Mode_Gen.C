@@ -467,11 +467,17 @@ void Semi_Mode_Gen() {
   TH1D* h=new TH1D("","",range_d, 0, range_d);
 
   // Initializing parameters for GH fit
-  string options = "W0Q";
+  string options[N];
+  for(int k=0; k<6; k++)
+    options[k] = "W0Q";
+  options[6] = "0Q";
+  options[7] = "0Q";
+  options[8] = "W0Q";
+	
   //SBND suggested values:
-  double pars_ini[4] = {1., 100., 50, -250};//90cm <RS>
+  double pars_ini[4] = {1., 130., 55, -150};
   //DUNE suggested values:
-  //double pars_ini[4]= {1., 100., 50, -1000};//90cm <RS>
+  //double pars_ini[4]= {1., 100., 50, -1000};
   TF1 *GH[N][M];
   TH1D* hd_centers[M];
   for(int k=0; k < M; k++) {
@@ -479,14 +485,14 @@ void Semi_Mode_Gen() {
     for(int j=0; j < N; j++) {
       GH[j][k] =  new TF1("GH",GaisserHillas,0.,d_max,4);
       GH[j][k]->SetParameters(pars_ini);
-      GH[j][k]->SetParLimits(1,10,500);
-      GH[j][k]->SetParLimits(2,10,2000);
-      GH[j][k]->SetParLimits(3,-1000,0);
+      //GH[j][k]->SetParLimits(1,10,500);
+      GH[j][k]->SetParLimits(2,10,200);
+      GH[j][k]->SetParLimits(3,-1500,-40);
       //The user might need to modify the actual values of these
       //parameters depending on his/her particular case
-      GH[j][k]->FixParameter(2,pars_ini[2]);
       GH[j][k]->FixParameter(3,pars_ini[3]);
-      
+      if(j==8)
+        GH[j][k]->SetParLimits(1,0,2000);
     }
   }
   // Defining Profiles we want to fit
@@ -613,7 +619,7 @@ void Semi_Mode_Gen() {
       if(n_entries[j][k]>0) {
 	gr[j][k]->Draw("p");
 	// Fitting the simulation data
-	gr[j][k]->Fit(GH[j][k],options.c_str(),"",min_x[j][k],max_x[j][k]);
+	gr[j][k]->Fit(GH[j][k],options[j].c_str(),"",min_x[j][k],max_x[j][k]);
 	//Loading parameters	
 	GH[j][k]->GetParameters(pars_GH);
 	GH[j][k]->SetParameters(pars_GH);
