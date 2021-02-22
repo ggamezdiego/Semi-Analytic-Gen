@@ -31,6 +31,7 @@ void Create_Tree_Info() {
   int VUV_hits[kMaxDevices];
   int Vis_hits[kMaxDevices];
   double posX, posY, posZ;
+  int genPhotons;	
   myTree->Branch("numberDevices",&numberDevices,"numberDevices/I");
   myTree->Branch("X", &posX, "X/D");
   myTree->Branch("Y", &posY, "Y/D");
